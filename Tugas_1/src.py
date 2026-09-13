@@ -1,7 +1,6 @@
 import numpy as np
 import os, csv
 
-
 # ---------------------------------------------------------
 # 1. Fungsi aktivasi
 # ---------------------------------------------------------
@@ -156,8 +155,6 @@ if __name__ == "__main__":
     )
 
     # --- Evaluasi Validasi per epoch ---
-    # Untuk menampilkan MSE validasi per epoch (seperti Tabel Grafik),
-    # kita perlu menjalankan ulang training sambil mengevaluasi tiap epoch.
     print("\n" + "=" * 55)
     print("TRAINING + VALIDATION PER EPOCH")
     print("=" * 55)
