@@ -1,18 +1,3 @@
-"""
-Single Layer Perceptron (SLP) - Sigmoid Activation
-====================================================
-Implementasi manual sesuai logika perhitungan di spreadsheet:
-- z (dot product) -> sigmoid -> prediksi -> error -> SSE
-- Update bobot dilakukan per SAMPLE (online/SGD),
-  sesuai pola di spreadsheet (bobot berubah setiap baris).
-- Gradient menggunakan turunan SSE: 2 * (output - target) * g'(z) * x
-- Update rule: w_new = w_old - lr * gradient
-
-Format yang diharapkan:
-    X.shape == (n_samples, n_features)   # (80, 4) untuk training
-    y.shape == (n_samples,)              # nilai 0 atau 1
-"""
-
 import numpy as np
 import os, csv
 
@@ -62,13 +47,6 @@ def compute_error(y_true, output):
 # 5. Training loop (ONLINE / per-sample update)
 # ---------------------------------------------------------
 def train_slp(X, y, bias, weights, learning_rate=0.1, epochs=5, verbose=True):
-    """
-    Online learning sesuai spreadsheet:
-    - Setiap sample, hitung forward -> gradient -> update bobot
-    - Gradient = 2 * (output - target) * sigmoid_derivative * x
-    - Update: w_new = w_old - lr * gradient
-    - MSE per epoch = rata-rata SSE seluruh sample dalam epoch
-    """
     history = []
 
     for epoch in range(1, epochs + 1):
@@ -141,11 +119,6 @@ def load_csv(filepath):
 
 
 def split_like_spreadsheet(X, y):
-    """
-    Split data sesuai spreadsheet:
-    - Training: 80 sampel = CSV rows 0-39 (setosa) + rows 50-89 (versicolor)
-    - Validation: 20 sampel = CSV rows 40-49 (setosa) + rows 90-99 (versicolor)
-    """
     train_idx = list(range(0, 40)) + list(range(50, 90))   # 80 sampel
     val_idx   = list(range(40, 50)) + list(range(90, 100))  # 20 sampel
 
