@@ -51,6 +51,7 @@ def train_slp(X, y, bias, weights, learning_rate=0.1, epochs=5, verbose=True):
 
     for epoch in range(1, epochs + 1):
         sse_list = []
+        pred_list = []
 
         for i in range(len(X)):
             x_i = X[i]
@@ -58,6 +59,7 @@ def train_slp(X, y, bias, weights, learning_rate=0.1, epochs=5, verbose=True):
 
             # -- forward pass untuk 1 sample --
             z, output, pred = forward_single(x_i, bias, weights)
+            pred_list.append(pred)
 
             # -- hitung error & SSE --
             error = y_i - output       # target - output
@@ -76,10 +78,11 @@ def train_slp(X, y, bias, weights, learning_rate=0.1, epochs=5, verbose=True):
             weights = weights - learning_rate * grad_weights
 
         mse = np.mean(sse_list)
+        acc = np.mean(np.array(pred_list) == y)
         history.append(mse)
 
         if verbose:
-            print(f"Epoch {epoch:3d} | MSE = {mse:.10f}")
+            print(f"Epoch {epoch:3d} | MSE = {mse:.10f} | Akurasi = {acc:.4f}")
 
     return bias, weights, history
 
@@ -97,6 +100,7 @@ def evaluate(X, y, bias, weights):
     error, sse = compute_error(y, output)
     return {
         "mse": sse.mean(),
+        "accuracy": (prediction == y).mean(),
         "outputs": output,
         "predictions": prediction,
     }
@@ -164,12 +168,14 @@ if __name__ == "__main__":
 
     for epoch in range(1, 6):
         sse_list = []
+        pred_list = []
 
         for i in range(len(X_train)):
             x_i = X_train[i]
             y_i = y_train[i]
 
             z, output, pred = forward_single(x_i, bias, weights)
+            pred_list.append(pred)
             error = y_i - output
             sse = error ** 2
             sse_list.append(sse)
@@ -182,9 +188,11 @@ if __name__ == "__main__":
             weights = weights - learning_rate * grad_weights
 
         train_mse = np.mean(sse_list)
+        train_acc = np.mean(np.array(pred_list) == y_train)
 
         # Evaluasi validasi dengan bobot akhir epoch ini
         hasil_val = evaluate(X_val, y_val, bias, weights)
         val_mse = hasil_val["mse"]
+        val_acc = hasil_val["accuracy"]
 
-        print(f"Epoch {epoch} | Train MSE = {train_mse:.10f} | Val MSE = {val_mse:.10f}")
+        print(f"Epoch {epoch} | Train MSE = {train_mse:.10f} | Train Acc = {train_acc:.4f} | Val MSE = {val_mse:.10f} | Val Acc = {val_acc:.4f}")
